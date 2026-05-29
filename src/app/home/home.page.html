@@ -1,20 +1,69 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Jadwal Minum Obat</ion-title>
+    <ion-buttons slot="end">
+      <ion-button id="notification-button">
+        <ion-icon slot="icon-only" name="notifications"></ion-icon>
+        <ion-badge color="danger" class="notification-badge" *ngIf="pendingNotifications.length > 0">
+          {{ pendingNotifications.length }}
+        </ion-badge>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <h2>Jadwal Hari Ini</h2>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+  <ion-list *ngIf="todayMedications.length > 0; else noData">
+    <ion-card *ngFor="let item of todayMedications" [routerLink]="['/medication-detail', item.med.id]">
+      <ion-card-header>
+        <ion-card-subtitle>{{ item.time }}</ion-card-subtitle>
+        <ion-card-title>{{ item.med.name }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content *ngIf="item.med.dosage">
+        Dosis: {{ item.med.dosage }}
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+  <ng-template #noData>
+    <div class="empty-state">
+      <ion-icon name="medical-outline"></ion-icon>
+      <p>Tidak ada jadwal minum obat hari ini.</p>
+    </div>
+  </ng-template>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button routerLink="/add-medication">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- Popover for Notifications -->
+  <ion-popover trigger="notification-button" dismissOnSelect="true">
+    <ng-template>
+      <ion-content>
+        <ion-list *ngIf="pendingNotifications.length > 0; else noNotif" lines="full">
+          <ion-list-header>
+            <ion-label>Menunggu Konfirmasi</ion-label>
+          </ion-list-header>
+          <ion-item button *ngFor="let item of pendingNotifications" [routerLink]="['/medication-detail', item.med.id]"
+            [queryParams]="{ time: item.time }">
+            <ion-icon name="alert-circle-outline" slot="start" color="warning"></ion-icon>
+            <ion-label>
+              <h2>{{ item.med.name }}</h2>
+              <p>Jadwal: {{ item.time }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <ng-template #noNotif>
+          <div class="ion-padding ion-text-center">
+            <p>Tidak ada notifikasi baru.</p>
+          </div>
+        </ng-template>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
 </ion-content>

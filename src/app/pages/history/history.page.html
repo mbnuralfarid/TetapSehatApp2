@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Riwayat Minum Obat</ion-title>
+    <ion-buttons slot="end">
+      <ion-button id="notification-button-history">
+        <ion-icon slot="icon-only" name="notifications"></ion-icon>
+        <ion-badge color="danger" class="notification-badge" *ngIf="pendingNotifications.length > 0">
+          {{ pendingNotifications.length }}
+        </ion-badge>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-list *ngIf="logs.length > 0; else noData">
+    <ion-item *ngFor="let log of logs">
+      <ion-icon slot="start" [name]="log.status === 'TAKEN' ? 'checkmark-circle' : 'close-circle'"
+        [color]="log.status === 'TAKEN' ? 'success' : 'danger'">
+      </ion-icon>
+      <ion-label>
+        <h2>{{ log.medicationName }}</h2>
+        <p>Jadwal: {{ log.date }} pukul {{ log.time }}</p>
+        <p><small>Dikonfirmasi pada: {{ formatDate(log.loggedAt) }}</small></p>
+      </ion-label>
+      <ion-badge slot="end" [color]="log.status === 'TAKEN' ? 'success' : 'danger'">
+        {{ log.status === 'TAKEN' ? 'Diminum' : 'Dilewati' }}
+      </ion-badge>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #noData>
+    <div class="empty-state">
+      <ion-icon name="time-outline"></ion-icon>
+      <p>Belum ada riwayat minum obat.</p>
+    </div>
+  </ng-template>
+
+  <!-- Popover for Notifications -->
+  <ion-popover trigger="notification-button-history" dismissOnSelect="true">
+    <ng-template>
+      <ion-content>
+        <ion-list *ngIf="pendingNotifications.length > 0; else noNotif" lines="full">
+          <ion-list-header>
+            <ion-label>Menunggu Konfirmasi</ion-label>
+          </ion-list-header>
+          <ion-item button *ngFor="let item of pendingNotifications" [routerLink]="['/medication-detail', item.med.id]"
+            [queryParams]="{ time: item.time }">
+            <ion-icon name="alert-circle-outline" slot="start" color="warning"></ion-icon>
+            <ion-label>
+              <h2>{{ item.med.name }}</h2>
+              <p>Jadwal: {{ item.time }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <ng-template #noNotif>
+          <div class="ion-padding ion-text-center">
+            <p>Tidak ada notifikasi baru.</p>
+          </div>
+        </ng-template>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+</ion-content>

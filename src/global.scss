@@ -1,3 +1,5 @@
+@import "./theme/variables.scss";
+
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
@@ -34,4 +36,42 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+/* @import "@ionic/angular/css/palettes/dark.system.css"; */
+
+/* Premium UI Enhancements */
+ion-content {
+    --background: #f8fcf8;
+    /* Light green-white tint */
+}
+
+ion-card {
+    border-radius: 16px !important;
+    box-shadow: 0 8px 24px rgba(46, 125, 50, 0.08) !important;
+    border: 1px solid rgba(46, 125, 50, 0.05);
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+ion-toolbar {
+    --border-style: none;
+}
+
+ion-header.ion-no-border::after {
+    display: none;
+}
+
+ion-title {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+ion-button {
+    --border-radius: 12px;
+    text-transform: none;
+    font-weight: 600;
+}
+
+.notification-badge {
+    background: var(--ion-color-danger) !important;
+    border: 2px solid var(--ion-color-primary);
+}

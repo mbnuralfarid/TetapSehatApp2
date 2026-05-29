@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detail Obat</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="editMedication()">
+        <ion-icon slot="icon-only" name="create"></ion-icon>
+      </ion-button>
+      <ion-button (click)="confirmDelete()">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" *ngIf="medication">
+
+  <!-- Confirmation Block -->
+  <ion-card color="tertiary" *ngIf="pendingTime && !hasConfirmedForPendingTime">
+    <ion-card-header>
+      <ion-card-title>Konfirmasi Jadwal Pukul {{ pendingTime }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p class="ion-margin-bottom">Apakah Anda sudah minum obat ini untuk jadwal pukul {{ pendingTime }} hari ini?</p>
+      <ion-grid class="ion-no-padding">
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" color="light" (click)="confirmMedication('SKIPPED')">Belum / Lewati</ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button expand="block" color="success" (click)="confirmMedication('TAKEN')">Sudah Diminum</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ medication.name }}</ion-card-title>
+      <ion-card-subtitle *ngIf="medication.dosage">Dosis: {{ medication.dosage }}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list lines="none">
+        <ion-item>
+          <ion-icon slot="start" name="calendar-outline" color="medium"></ion-icon>
+          <ion-label>
+            <h2>Mulai</h2>
+            <p>{{ formatDate(medication.startDate) }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon slot="start" name="calendar-outline" color="medium"></ion-icon>
+          <ion-label>
+            <h2>Selesai</h2>
+            <p>{{ formatDate(medication.endDate) }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <h3 class="ion-padding-start">Waktu Minum</h3>
+  <ion-list inset="true">
+    <ion-item *ngFor="let time of medication.times">
+      <ion-icon slot="start" name="time-outline" color="primary"></ion-icon>
+      <ion-label>{{ time }}</ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
